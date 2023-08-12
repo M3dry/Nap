@@ -1,0 +1,23 @@
+cabal-version:      3.0
+name:               dalge
+version:            0.1.0.0
+license:            AGPL-3.0-or-later
+author:             m3dry
+maintainer:         m3dry@tutamail.com
+category:           Web
+build-type:         Simple
+
+common warnings
+    ghc-options: -Wall
+
+executable dalge
+    import:           warnings
+    main-is:          Main.hs
+    -- other-modules:
+    build-depends:
+        , base
+        , text
+        , parsec
+        , pretty-simple
+    hs-source-dirs:   app
+    default-language: GHC2021
