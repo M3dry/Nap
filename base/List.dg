@@ -1,0 +1,39 @@
+type List(a) = {
+    Cons(a, List),
+    Empty()
+}
+
+head(list: List(a)): Opt(a) {
+    return match (list) {
+        Cons(x, _) => Just(x),
+        _ => None,
+    };
+}
+
+tail(list: List(a)): Opt(List(a)) {
+    return match (list) {
+        Cons(_, xs) => Just(xs),
+        _ => None,
+    };
+}
+
+last(list: List(a)): Opt(a) {
+    let mut l = list;
+    while (True) {
+        l = match (l) {
+            Cons(a, Empty) => {
+                return Just(a);
+            },
+            Cons(_, next) => {
+                l = next;
+            },
+            _ => {
+                return None;
+            },
+        };
+    }
+}
+
+io main() {
+    print(last(Cons(10, Cons(20, Empty))));
+}

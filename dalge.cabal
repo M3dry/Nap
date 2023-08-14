@@ -13,7 +13,14 @@ common warnings
 executable dalge
     import:           warnings
     main-is:          Main.hs
-    -- other-modules:
+    other-modules:
+        , Parser
+        , Parser.Util
+        , Parser.Function
+        , Parser.ExprStmt
+        , Parser.Literal
+        , Parser.Type
+        , Parser.Pattern
     build-depends:
         , base
         , text
