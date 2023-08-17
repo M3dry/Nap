@@ -5,6 +5,7 @@ import Parser.ExprStmt
 import Parser.Type
 import Parser.Util
 import Text.Parsec
+import Language.Haskell.TH.Syntax (Lift)
 
 data Function = Function
   { fIO :: Bool,
@@ -13,7 +14,10 @@ data Function = Function
     fReturn :: Maybe Type,
     fBody :: Block
   }
-  deriving (Show)
+  deriving (Show, Lift)
+
+instance Eq Function where
+  Function {fName = name1} == Function {fName = name2} = name1 == name2
 
 functionP :: Parser Function
 functionP =

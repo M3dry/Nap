@@ -1,0 +1,20 @@
+type Bool() = {
+    True(),
+    False(),
+}
+
+type String() = {
+    TestString(),
+}
+
+type Int() = {
+    TestInt(),
+}
+
+io print(str: String) {
+    let comp_def = True;
+}
+
+showInt(int: Int): String {
+    return "";
+}

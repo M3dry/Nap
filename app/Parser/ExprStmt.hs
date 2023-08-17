@@ -5,6 +5,7 @@ import Parser.Pattern
 import Parser.Type
 import Parser.Util
 import Text.Parsec
+import Language.Haskell.TH.Syntax (Lift)
 
 type Block = [Statement]
 
@@ -19,7 +20,7 @@ data Statement
   | SExpr Expression
   | SFor Pattern Expression Expression
   | SWhile Expression Expression
-  deriving (Show)
+  deriving (Show, Lift)
 
 statementP :: Parser Statement
 statementP =
@@ -99,7 +100,7 @@ data Infix
   | Sub
   | Mul
   | Div
-  deriving (Show)
+  deriving (Show, Lift)
 
 data Expression
   = ELiteral (Literal Expression)
@@ -110,7 +111,7 @@ data Expression
   | EBlock Block
   | EType Expression Type
   | EInfix Expression Infix Expression
-  deriving (Show)
+  deriving (Show, Lift)
 
 expressionP :: Parser Expression
 expressionP =

@@ -1,13 +1,16 @@
+{-# LANGUAGE DeriveLift #-}
+
 module Parser.Type where
 
 import Parser.Util
 import Text.Parsec
+import Language.Haskell.TH.Syntax (Lift)
 
 data Type
   = TSimple TypeName
   | TComplex TypeName [Type]
   | TVar IdenName
-  deriving (Show)
+  deriving (Show, Lift)
 
 typeP :: Parser Type
 typeP =
@@ -27,7 +30,7 @@ data TypeDef = TypeDef
     tVars :: [IdenName],
     tConstructors :: [(TypeName, [Type])]
   }
-  deriving (Show)
+  deriving (Show, Lift)
 
 typeDefP :: Parser TypeDef
 typeDefP =

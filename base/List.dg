@@ -1,6 +1,8 @@
+import base/Opt.dg;
+
 type List(a) = {
     Cons(a, List),
-    Empty()
+    Empty(),
 }
 
 head(list: List(a)): Opt(a) {
@@ -35,5 +37,5 @@ last(list: List(a)): Opt(a) {
 }
 
 io main() {
-    print(last(Cons(10, Cons(20, Empty))));
+    print(showInt(last(Cons(10, Cons(20, Empty)))));
 }

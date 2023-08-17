@@ -2,19 +2,20 @@ module Parser.Literal where
 
 import Parser.Util
 import Text.Parsec
+import Language.Haskell.TH.Syntax (Lift)
 
 data Literal a
   = LNum Bool String
   | LArray [a]
   | LString [Escaped]
   | LChar Escaped
-  deriving (Show)
+  deriving (Show, Lift)
 
 data Escaped
   = Escaped Escaped
   | Normal Char
   | Backslash
-  deriving (Show)
+  deriving (Show, Lift)
 
 escapedP :: Parser Escaped
 escapedP =

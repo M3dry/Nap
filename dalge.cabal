@@ -21,10 +21,20 @@ executable dalge
         , Parser.Literal
         , Parser.Type
         , Parser.Pattern
+        , Base
+        , Util
+        , Static
+        , Static.Error
+        , Static.Duplicates
+        , Static.Found
+        , ToC
     build-depends:
         , base
         , text
         , parsec
         , pretty-simple
+        , file-embed
+        , bytestring
+        , template-haskell
     hs-source-dirs:   app
     default-language: GHC2021
