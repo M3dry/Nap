@@ -72,17 +72,17 @@
           run = {
             description = "Run the project with ghcid auto-recompile";
             exec = ''
-              ghcid -c "cabal repl exe:dalge" --warnings -T :main
+              ghcid -c "cabal repl exe:nap" --warnings -T :main
             '';
             category = "Primary";
           };
         };
 
-        packages.default = self'.packages.dalge;
-        apps.default = self'.apps.dalge;
+        packages.default = self'.packages.nap;
+        apps.default = self'.apps.nap;
         apps.tailwind-run.program = "${lib.getExe pkgs.haskellPackages.tailwind}";
         devShells.default = pkgs.mkShell {
-          name = "dalge";
+          name = "nap";
           inputsFrom = [
             config.haskellProjects.default.outputs.devShell
             config.flake-root.devShell
