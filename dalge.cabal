@@ -25,8 +25,8 @@ executable dalge
         , Util
         , Static
         , Static.Error
-        , Static.Duplicates
-        , Static.Found
+        , Static.Typing
+        , Static.Test
         , ToC
     build-depends:
         , base
@@ -36,5 +36,6 @@ executable dalge
         , file-embed
         , bytestring
         , template-haskell
+        , containers
     hs-source-dirs:   app
     default-language: GHC2021

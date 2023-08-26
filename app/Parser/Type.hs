@@ -2,26 +2,31 @@
 
 module Parser.Type where
 
+import Language.Haskell.TH.Syntax (Lift)
 import Parser.Util
 import Text.Parsec
-import Language.Haskell.TH.Syntax (Lift)
 
 data Type
   = TSimple TypeName
   | TComplex TypeName [Type]
   | TVar IdenName
-  deriving (Show, Lift)
+  | TReturn Type
+  | TUnit
+  | TAny
+  | TAnyTiedTo String
+  deriving (Show, Eq, Lift)
 
 typeP :: Parser Type
 typeP =
-  try
-    ( TComplex
-        <$> typeNameP
-        <*> ( spaces
-                *> insideParen
-                  (many $ typeP <* spaces)
-            )
-    )
+  (TUnit <$ insideParen spaces)
+    <|> try
+      ( TComplex
+          <$> typeNameP
+          <*> ( spaces
+                  *> insideParen
+                    (many $ typeP <* spaces)
+              )
+      )
     <|> (TSimple <$> typeNameP)
     <|> (TVar <$> idenNameP)
 

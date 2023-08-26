@@ -1,14 +1,15 @@
 module Parser.Literal where
 
+import Language.Haskell.TH.Syntax (Lift)
 import Parser.Util
 import Text.Parsec
-import Language.Haskell.TH.Syntax (Lift)
 
 data Literal a
   = LNum Bool String
   | LArray [a]
   | LString [Escaped]
   | LChar Escaped
+  | LUnit
   deriving (Show, Lift)
 
 data Escaped
@@ -28,10 +29,11 @@ escapedP =
 
 literalP :: Parser a -> Parser (Literal a)
 literalP pa =
-  ( LNum
-      <$> ((True <$ char '-') <|> pure False)
-      <*> many1 digit
-  )
+  (LUnit <$ string "()")
+    <|> ( LNum
+            <$> ((True <$ char '-') <|> pure False)
+            <*> many1 digit
+        )
     <|> ( LArray
             <$> insideBracket
               ( (pa <* spaces)

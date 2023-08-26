@@ -2,15 +2,15 @@
 
 module Static where
 
+import Data.Map qualified as M
 import Language.Haskell.TH.Syntax (Lift)
 import Parser (File (File), TopLevel (TFunction, TTypeDef), fileP)
-import Parser.Type (TypeDef (tConstructors, tName))
-import Static.Duplicates (duplicates)
-import Static.Found (checkFunction, checkTypeDef)
-import Text.Parsec (ParseError, parse)
-import Util (intoTwo)
-import Static.Error (Error)
 import Parser.Function (fName)
+import Parser.Type (Type (TComplex, TVar), TypeDef (tConstructors, tName, tVars))
+import Static.Error (Error)
+import Static.Typing (typeCheckFunction)
+import Text.Parsec (ParseError, parse)
+import Util (Treither (First, Second), intoTwo)
 
 data CheckFile = CheckFile [CheckFile] [TopLevel]
   deriving (Show, Lift)
@@ -41,19 +41,22 @@ check (CheckFile imports file) = do
           )
           (file <> getTopLevel imports)
       exprRefs =
-        map fName fs
-          <> concatMap
-            (map fst . tConstructors)
-            ts
-      typeRefs = map tName ts
-  duplicates fs ts
+        M.fromList $
+          map (\f -> (fName f, First f)) fs
+            <> concatMap
+              ( \t ->
+                  map
+                    (\(name, sig) -> (name, Second $ typeFromConstructor t sig))
+                    $ tConstructors t
+              )
+              ts
+      typeRefs = M.fromList $ map (\t -> (tName t, t)) ts
   foldl
-    (\acc f -> acc >> checkFunction exprRefs typeRefs f)
+    (\acc f -> acc >> typeCheckFunction exprRefs typeRefs f)
     (Right ())
     fs
-  foldl
-    (\acc t -> acc >> checkTypeDef typeRefs t)
-    (Right ())
-    ts
   where
     getTopLevel = foldl (\acc (CheckFile files' tops) -> acc <> tops <> getTopLevel files') []
+    typeFromConstructor :: TypeDef -> [Type] -> ([Type], Type)
+    typeFromConstructor t sig =
+      (sig, TComplex (tName t) $ map TVar $ tVars t)
