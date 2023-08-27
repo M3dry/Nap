@@ -19,7 +19,7 @@ data Statement
     | SReturn Expression
     | SExpr Expression
     | SExprRet Expression
-    | SFor Pattern Expression Expression
+    | SFor IdenName Expression Expression
     | SWhile Expression Expression
     deriving (Show, Lift)
 
@@ -78,7 +78,7 @@ statementP =
             )
         <|> ( string "for"
                 *> ( SFor
-                        <$> (spaces *> patternP)
+                        <$> (spaces *> idenNameP)
                         <*> ( spaces
                                 *> string "in"
                                 *> spaces

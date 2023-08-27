@@ -10,7 +10,6 @@ data Type
   = TSimple TypeName
   | TComplex TypeName [Type]
   | TVar IdenName
-  | TReturn Type
   | TUnit
   | TAny
   | TAnyTiedTo String

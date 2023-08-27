@@ -1,7 +1,7 @@
 module Util where
 
 import Data.Map qualified as M
-import Static.Error (Error)
+import Static.Error (Error (Duplicate'))
 
 data Treither a b c
     = First a
@@ -33,13 +33,18 @@ duplicate (x : xs) =
 insertLookup :: (Ord a) => a -> b -> M.Map a b -> (Maybe b, M.Map a b)
 insertLookup = M.insertLookupWithKey (\_ a _ -> a)
 
-union :: (Ord a) => M.Map a b -> M.Map a b -> Either [Error] (M.Map a b)
+union :: (Ord a) => M.Map a b -> M.Map a b -> Either [a] (M.Map a b)
 union a =
     M.foldlWithKey
         ( \a' bK' b' -> do
             aOk <- a'
             case insertLookup bK' b' aOk of
                 (Nothing, m) -> Right m
-                (Just _, _) -> Left []
+                (Just _, _) -> Left [bK']
         )
         (Right a)
+
+union' :: M.Map String a -> M.Map String a -> Either [Error] (M.Map String a)
+union' m m' = case m `union` m' of
+    Right r -> return r
+    Left as -> Left $ map Duplicate' as

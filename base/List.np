@@ -1,4 +1,4 @@
-import base/Opt.dg;
+import base/Opt.np;
 
 type List(a) = {
     Cons(a, List(a)),
@@ -6,23 +6,24 @@ type List(a) = {
 }
 
 head(list: List(a)): Opt(a) {
-    return match (list) {
+    match (list) {
         Cons(x, _) => Just(x),
         _ => None,
-    };
+    }
 }
 
 tail(list: List(a)): Opt(List(a)) {
-    return match (list) {
+    match (list) {
         Cons(_, xs) => Just(xs),
         _ => None,
-    };
+    }
 }
 
 last(list: List(a)): Opt(a) {
     let mut l = list;
+
     while (True) {
-        l = match (l) {
+        match (l) {
             Cons(a, Empty) => {
                 return Just(a);
             },
@@ -35,14 +36,14 @@ last(list: List(a)): Opt(a) {
         };
     }
 
-    return None;
+    None
 }
 
 io main() {
     match (last(Cons(10, Cons(20, Empty)))) {
         Just(x) => {
             let x = 100;
-            return print(showInt(x));
+            print(showInt(x));
         },
         _ => (),
     };

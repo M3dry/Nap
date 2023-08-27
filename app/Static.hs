@@ -5,7 +5,7 @@ module Static where
 import Data.Map qualified as M
 import Language.Haskell.TH.Syntax (Lift)
 import Parser (File (File), TopLevel (TFunction, TTypeDef), fileP)
-import Parser.Function (fName)
+import Parser.Function (fName, Function)
 import Parser.Type (Type (TComplex, TVar), TypeDef (tConstructors, tName, tVars))
 import Static.Error (Error)
 import Static.Typing (typeCheckFunction)
@@ -17,7 +17,7 @@ data CheckFile = CheckFile [CheckFile] [TopLevel]
 
 fileifyFile :: Bool -> File -> IO File
 fileifyFile prelude (File imports file) = do
-  imports' <- mapM readFile $ (if prelude then ("base/Prelude.dg" :) else id) imports
+  imports' <- mapM readFile $ (if prelude then ("base/Prelude.np" :) else id) imports
   return $ File imports' file
 
 fileToCheckFile :: File -> Either [ParseError] CheckFile
@@ -31,7 +31,7 @@ fileToCheckFile (File files file) =
                 else Left $ concat errs'
         else Left errs
 
-check :: CheckFile -> Either [Error] ()
+check :: CheckFile -> Either [Error] [Function]
 check (CheckFile imports file) = do
   let (fs, ts) =
         intoTwo
@@ -52,9 +52,12 @@ check (CheckFile imports file) = do
               ts
       typeRefs = M.fromList $ map (\t -> (tName t, t)) ts
   foldl
-    (\acc f -> acc >> typeCheckFunction exprRefs typeRefs f)
-    (Right ())
-    fs
+        (\acc f -> do
+            h <- acc
+            w <- typeCheckFunction exprRefs typeRefs f
+            return (w : h))
+        (Right [])
+        fs
   where
     getTopLevel = foldl (\acc (CheckFile files' tops) -> acc <> tops <> getTopLevel files') []
     typeFromConstructor :: TypeDef -> [Type] -> ([Type], Type)

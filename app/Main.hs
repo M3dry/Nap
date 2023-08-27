@@ -18,5 +18,4 @@ main = do
   let checkFile = case fileToCheckFile fileifyied of
         Right f -> f
         Left err -> error $ show err
-  putStrLn . L.unpack $ pShow checkFile
   putStrLn . L.unpack . pShow . check $ checkFile

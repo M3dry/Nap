@@ -12,9 +12,9 @@ type Int() = {
 }
 
 io print(str: String) {
-    let comp_def = True;
+    ()
 }
 
 showInt(int: Int): String {
-    return "";
+    ""
 }

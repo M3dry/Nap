@@ -2,11 +2,3 @@ type Opt(a) = {
     Just(a),
     None(),
 }
-
-succ(opt: Opt(a)): Opt(a) {
-    return opt;
-}
-
-io main() {
-    _ = succ(Just(100));
-}
