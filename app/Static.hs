@@ -8,7 +8,7 @@ import Parser (File (File), TopLevel (TFunction, TTypeDef), fileP)
 import Parser.Function (fName, Function)
 import Parser.Type (Type (TComplex, TVar), TypeDef (tConstructors, tName, tVars))
 import Static.Error (Error)
-import Static.Typing (typeCheckFunction)
+import Static.Typing (typeCheckFunction, FunctionTyped)
 import Text.Parsec (ParseError, parse)
 import Util (Treither (First, Second), intoTwo)
 
@@ -31,7 +31,7 @@ fileToCheckFile (File files file) =
                 else Left $ concat errs'
         else Left errs
 
-check :: CheckFile -> Either [Error] [Function]
+check :: CheckFile -> Either [Error] [FunctionTyped]
 check (CheckFile imports file) = do
   let (fs, ts) =
         intoTwo

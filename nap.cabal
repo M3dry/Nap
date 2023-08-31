@@ -28,6 +28,13 @@ executable nap
         , Static.Typing
         , Static.Test
         , ToC
+        , ToC.Util
+        , ToC.Refs
+        , ToC.CDSL
+        , ToC.TypeDef
+        , ToC.Function
+        , ToC.Statement
+        , ToC.Expression
     build-depends:
         , base
         , text
@@ -37,5 +44,6 @@ executable nap
         , bytestring
         , template-haskell
         , containers
+        , mtl
     hs-source-dirs:   app
     default-language: GHC2021

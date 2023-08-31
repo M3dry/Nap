@@ -7,16 +7,18 @@ import Parser.Util
 import Text.Parsec
 import Language.Haskell.TH.Syntax (Lift)
 
-data Function = Function
+data Function' b = Function
   { fIO :: Bool,
     fName :: IdenName,
     fSignature :: [(Bool, IdenName, Type)],
     fReturn :: Maybe Type,
-    fBody :: Block
+    fBody :: b
   }
   deriving (Show, Lift)
 
-instance Eq Function where
+type Function = Function' Block
+
+instance Eq (Function' a) where
   Function {fName = name1} == Function {fName = name2} = name1 == name2
 
 functionP :: Parser Function

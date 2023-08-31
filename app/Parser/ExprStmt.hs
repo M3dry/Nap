@@ -185,6 +185,7 @@ expressionP :: Parser Expression
 expressionP = infixP expr'
   where
     iden = idenNameP <|> typeNameP
+    expr :: Parser Expression
     expr =
         try (ELiteral LUnit <$ string "()")
             <|> insideParen expressionP
