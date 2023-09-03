@@ -1,5 +1,7 @@
+print(n: Int) {
+    ()
+}
+
 io main() {
-    for i in ([1, 2, 3, 4]) {
-        print(showInt(i));
-    }
+    print(100);
 }

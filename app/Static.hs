@@ -5,7 +5,7 @@ module Static where
 import Data.Map qualified as M
 import Language.Haskell.TH.Syntax (Lift)
 import Parser (File (File), TopLevel (TFunction, TTypeDef), fileP)
-import Parser.Function (fName, Function)
+import Parser.Function (fName)
 import Parser.Type (Type (TComplex, TVar), TypeDef (tConstructors, tName, tVars))
 import Static.Error (Error)
 import Static.Typing (typeCheckFunction, FunctionTyped)
@@ -17,7 +17,7 @@ data CheckFile = CheckFile [CheckFile] [TopLevel]
 
 fileifyFile :: Bool -> File -> IO File
 fileifyFile prelude (File imports file) = do
-  imports' <- mapM readFile $ (if prelude then ("base/Prelude.np" :) else id) imports
+  imports' <- mapM readFile $ (if prelude then id else id) imports
   return $ File imports' file
 
 fileToCheckFile :: File -> Either [ParseError] CheckFile

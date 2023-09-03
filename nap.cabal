@@ -29,12 +29,11 @@ executable nap
         , Static.Test
         , ToC
         , ToC.Util
-        , ToC.Refs
         , ToC.CDSL
         , ToC.TypeDef
         , ToC.Function
-        , ToC.Statement
-        , ToC.Expression
+        , ToC.ExprStmt
+        , ToC.Test
     build-depends:
         , base
         , text
