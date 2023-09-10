@@ -33,6 +33,7 @@ executable nap
         , ToC.TypeDef
         , ToC.Function
         , ToC.ExprStmt
+        , ToC.DependencyMaker
         , ToC.Test
     build-depends:
         , base
