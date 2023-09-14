@@ -17,7 +17,7 @@ data CType
     = CTName String
     | CTPointer CType
     | CTStruct String
-    deriving (Show)
+    deriving (Show, Eq)
 
 isVoidPtr :: CType -> Bool
 isVoidPtr (CTPointer (CTName "void")) = True

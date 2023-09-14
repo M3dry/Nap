@@ -3,22 +3,22 @@ module ToC.Test where
 import Control.Monad.Except (runExcept)
 import Parser.Type
 import ToC.CDSL (CFunctionDec (CFunctionDec), CFunctionDef (CFunctionDef), CStructDef (CStructDef), CType (CTName, CTPointer, CTStruct), ToString (toString))
-import ToC.TypeDef
 import ToC.Util (join)
+import ToC.DependencyMaker (create)
 
 opt = TypeDef "Opt" ["a"] [("Just", [TVar "a"]), ("Nothing", [])]
-
 list = TypeDef "List" ["a"] [("List", [TVar "a", TComplex "List" [TVar "a"]]), ("Empty", [])]
 
-list' = runExcept $ typeDefToC list [CTPointer $ CTName "int64_t"]
+either' = TypeDef "Either" ["a", "b"] [("Left", [TVar "a"]), ("Right", [TVar "b"])]
 
-opt' = runExcept $ typeDefToC opt [CTPointer $ CTStruct "_List__int64_t_ptr"]
+ts = [(opt, [("a", CTPointer $ CTName "int64_t")]), (list, [("a", CTPointer $ CTName "int64_t")]), (list, [("a", CTPointer $ CTStruct "_List__int64_t_ptr")])]
 
 run :: IO ()
-run = run' [opt', list']
+run = run' ts
 
+run' :: [(TypeDef, [(String, CType)])] -> IO ()
 run' t =
-    let t' = map unwrap t
+    let t' = unwrap . runExcept . create $ t
      in do
             sequence_ $ sDecs t'
             sequence_ $ fDecs t'
@@ -28,13 +28,13 @@ run' t =
     unwrap (Right r) = r
     sDecs =
         map
-            ( \(sts, s, fs, copyF) -> do
+            ( \(sts, s, _, _) -> do
                 mapM_ (putStrLn . structDec . fst) sts
                 putStrLn $ structDec s
             )
     fDecs =
         map
-            ( \(sts, s, fs, copyF) -> do
+            ( \(sts, _, fs, copyF) -> do
                 mapM_ (putStrLn . printD . dec . snd) sts
                 putStrLn . printD $ dec copyF
                 mapM_ (putStrLn . printD . dec) fs
